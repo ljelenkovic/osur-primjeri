@@ -1,0 +1,28 @@
+Prikaz datoteka i direktorija te kako oni daju elemente programa
+-----------------------------------------------------------------
+
+config.ini
+Makefile				=> program = main.o + mod-A.o + mod-B.o
+main.c						=> main.o
+include
+	postavke.h
+A							=> mod-A.o = A1.o + A2.o + a/mod-a.o + b/mod-b.o
+	A1.c 						=> A1.o
+	A2.c 						=> A2.o
+	Makefile
+	a							=> mod-a.o = a1.o + i/mod-i.o + ii/mod-ii.o
+		a1.c						=> a1.0
+		Makefile
+		i							=> mod-i.o = i1.o + i2.o
+			i1.c						=> i1.o
+			i2.c						=> i2.o
+			Makefile
+		ii							=> mod-ii.o = ii1.o
+			ii1.c						=> ii1.o
+			Makefile
+	b							=> mod-b.o = b1.o
+		b1.c						=> b1.o
+		Makefile
+B							=> mod-B.o = B1.o
+	B1.c						=> B1.o
+	Makefile
