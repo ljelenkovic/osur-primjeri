@@ -25,7 +25,7 @@ struct list_head {
 	struct list_head *head = &_head;
 	struct object *obj1 = &_obj1, *obj2 = &_obj2, *obj3 = &_obj3;
 
- * 1. use list manually:
+ * 1. use list manually (just to demonstrate connections):
 	head->prev = head->next = &head; //empty list
 
 	//add obj1:
@@ -36,21 +36,17 @@ struct list_head {
 
 	//add obj2 to tail:
 	head->prev = &obj2->list_item;
-	head->next = &obj1->list_item;
-	obj1->list_item.prev = head;
 	obj1->list_item.next = &obj2->list_item;
 	obj2->list_item.prev = &obj1->list_item;
 	obj2->list_item.next = head;
 
 	//add obj3 between obj1 and obj2:
-	obj1->list_item.prev = head;
 	obj1->list_item.next = &obj3->list_item;
 	obj3->list_item.prev = &obj1->list_item;
 	obj3->list_item.next = &obj2->list_item;
 	obj2->list_item.prev = &obj3->list_item;
-	obj2->list_item.next = head;
 
- * 2. use list with macros and functions:
+ * 2. use list with macros and functions (intended way):
  	LIST_HEAD(_head); //only for static initialization
 	//or INIT_LIST_HEAD(&_head) for non-static initialization
 
