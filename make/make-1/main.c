@@ -4,7 +4,7 @@
 #include <obradi.h>
 #include <zaprimi.h>
 
-int main ()
+int main()
 {
 	int i;
 	for (i = 0; i < 5; i++)

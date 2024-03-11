@@ -2,7 +2,7 @@
 #include "a.h"
 #include "b.h"
 
-double a ( double p )
+double a(double p)
 {
-	return A * cos ( b(p) );
+	return A * cos(b(p));
 }
