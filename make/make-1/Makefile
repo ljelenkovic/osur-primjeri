@@ -7,6 +7,8 @@ program: main.o zaprimi/zaprimi.o obradi/obradi.o ispisi/ispisi.o
 	gcc $(LDFLAGS) main.o zaprimi/zaprimi.o obradi/obradi.o ispisi/ispisi.o \
 	$(LDLIBS) -o program
 
+main.o: main.c zaprimi/zaprimi.h obradi/obradi.h ispisi/ispisi.h
+
 .PHONY: zaprimi/zaprimi.o obradi/obradi.o ispisi/ispisi.o
 zaprimi/zaprimi.o:
 	make -C zaprimi
