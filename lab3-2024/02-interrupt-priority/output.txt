@@ -1,0 +1,43 @@
+Benu: lab3-2024:02-interrupt-priority, Version: 1.0 (i386)
+Example program: [programs/interrupts/interrupts.c:interrupts]
+Interrupts with priority processing.
+
+Main loop ...
+Main loop ...
+added simulated interrupt 5 to queue
+>>> START interrupt processing: inum=5
+    interrupt processing: inum=5 iter=1/10
+    interrupt processing: inum=5 iter=2/10
+added simulated interrupt 8 to queue
+>>> START interrupt processing: inum=8
+    interrupt processing: inum=8 iter=1/10
+    interrupt processing: inum=8 iter=2/10
+added simulated interrupt 7 to queue
+    interrupt processing: inum=8 iter=3/10
+    interrupt processing: inum=8 iter=4/10
+    interrupt processing: inum=8 iter=5/10
+added simulated interrupt 9 to queue
+>>> START interrupt processing: inum=9
+    interrupt processing: inum=9 iter=1/10
+    interrupt processing: inum=9 iter=2/10
+    interrupt processing: inum=9 iter=3/10
+    interrupt processing: inum=9 iter=4/10
+    interrupt processing: inum=9 iter=5/10
+    interrupt processing: inum=9 iter=6/10
+    interrupt processing: inum=9 iter=7/10
+    interrupt processing: inum=9 iter=8/10
+    interrupt processing: inum=9 iter=9/10
+    interrupt processing: inum=9 iter=10/10
+<<< END interrupt processing: inum=9
+    interrupt processing: inum=8 iter=6/10
+    interrupt processing: inum=8 iter=7/10
+    interrupt processing: inum=8 iter=8/10
+    interrupt processing: inum=8 iter=9/10
+    interrupt processing: inum=8 iter=10/10
+<<< END interrupt processing: inum=8
+>>> START interrupt processing: inum=7
+    interrupt processing: inum=7 iter=1/10
+    interrupt processing: inum=7 iter=2/10
+    interrupt processing: inum=7 iter=3/10
+qemu-system-i386: terminating on signal 2
+

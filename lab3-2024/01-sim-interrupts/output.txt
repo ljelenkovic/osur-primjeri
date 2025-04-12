@@ -1,0 +1,22 @@
+Benu: lab3-2024:01-sim-interrupts, Version: 1.0 (i386)
+Example program: [programs/interrupts/interrupts.c:interrupts]
+Simulated interrupts.
+
+Main loop ...
+Main loop ...
+>>> START interrupt processing: inum=5
+    interrupt processing: inum=5 iter=1/10
+    interrupt processing: inum=5 iter=2/10
+>>> START interrupt processing: inum=8
+    interrupt processing: inum=8 iter=1/10
+>>> START interrupt processing: inum=7
+    interrupt processing: inum=7 iter=1/10
+    interrupt processing: inum=7 iter=2/10
+>>> START interrupt processing: inum=9
+    interrupt processing: inum=9 iter=1/10
+    interrupt processing: inum=9 iter=2/10
+    interrupt processing: inum=9 iter=3/10
+    interrupt processing: inum=9 iter=4/10
+    interrupt processing: inum=9 iter=5/10
+qemu-system-i386: terminating on signal 2
+
