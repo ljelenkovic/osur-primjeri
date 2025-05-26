@@ -1,0 +1,61 @@
+<!doctype html>
+
+<html lang="hr">
+
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link rel="stylesheet" type="text/css" href="osur.css">
+
+<title>Priprema razvojne okoline - ARM</title>
+</head>
+
+<body>
+
+<h1>Priprema razvojne okoline na ARM procesorima (Mac)</h1>
+
+Ostale upute pretpostavljaju da je razvojno računalo x86 kompatibilno pa su razvojni alati dovoljni (uz posebne zastavice). Međutim, mnogi današnji (razvojni) sustavi danas koriste ARM procesore. Na njima treba malo promijeniti postupak pripreme razvojne okoline.
+<p>
+U nastavku je prikazan jedan način čije je upute pripremio student Lovro Grgurić Mileusnić (korake od 1. do 4.).
+
+
+
+<ol>
+<li>Instalirati alat <a href="https://mac.getutm.app/">UTM</a> (frontend za qemu)
+<li>Preuzeti i instalirati <a href="https://docs.getutm.app/guides/ubuntu/">Ubuntu za UTM</a>
+<li>Instalacija paketa iz <a href="razvojna-okolina.html">uputa</a> (možda dovoljno: <code>git qemu-system gcc binutils make gdb</code>)
+<li>Razvoj za i386 (ARCH=i386, default)
+	<ol type="a">
+	<li>Instalirati paket <code>gcc-multilib-i686-linux-gnu</code> koji sadrži cross compiler za i386
+	<li>U datoteci (u svim direktorijima koji se koriste) <code>arch/i386/config.ini</code> promijeniti CC i LINK varijable:
+<pre>
+LINK = i686-linux-gnu-ld
+CC = i686-linux-gnu-gcc
+(kasnije isto sa CC_K, LINK_K, CC_U, LINK_U)
+</pre>
+	<li>Za korištenje debuggera umjesto <code>gdb</code> koristiti <code>gdb-multiarch</code>:
+		<ol>
+		<li>instalirati ga sa <code>sudo apt install gdb-multiarch</code>
+		<li>postaviti <code>DEBUG_GDB = gdb-multiarch</code> u datoteci <code>config.ini</code>
+		</ol>
+	<li>Dalje raditi prema uputama.
+	</ol>
+<li>Razvoj za ARM (ARCH=arm)
+	<ol type="a">
+	<li>Možda instalirati pakete: <code>gcc-arm-none-eabi</code> (možda i <code>gcc-multilib</code>)
+	<li>Pri prevođenju dodati <code>ARCH=arm</code>:
+		<ul>
+		<li>pri samom pokretanju: <code>make ARCH=arm qemu</code>
+		<li>ili u ljusci s koje se pokreće postaviti varijablu okoline: <code>export ARCH=arm</code>
+		<li>ili u datoteku <code>.bashrc</code> (na kraj) dodati <code>export ARCH=arm</code> (<code>.bashrc</code> je u početnom direktoriju korisnika) pa će ona biti postavljena odmah pri pokretanju ljuske.
+		</ul>
+	<li>U sloju arhitekture mijenjati kod u direktoriju <code>arm</code> (ne <code>i386</code>).
+	<li>Iako Benu nema podršku za arm do kraja (staje na 08/02), sve vježbe se mogu raditi s arm arhitekturom jer je i zadnja na 07/06.
+	<li>Prekid qemu-a kada se koristi arm postiže se sa: Ctrl+A pa X.
+	</ol>
+</ol>
+
+
+</body>
+
+</html>

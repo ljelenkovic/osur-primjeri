@@ -1,0 +1,187 @@
+﻿<!doctype html>
+
+<html lang="hr">
+
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link rel="stylesheet" type="text/css" href="osur.css">
+
+<title>OSUR upute za rad s repozitorijem</title>
+</head>
+
+<body>
+
+<header>
+<h1>LAB0. Uspostava početna repozitorija</h1>
+<hr>
+</header>
+
+<main>
+<section>
+<h2>Pripremiti razvojnu okolinu</h2>
+<div class="opis">
+    Prema <a href="razvojna-okolina.html">uputama</a> ili na sličan način pripremiti razvojno okruženje.
+    Provjeriti je li sve instalirano i radi. Npr. naredbama:
+    <pre>$ cd ~ #ili gdje želite smjestiti kod
+$ git clone --depth=1 https://github.com/ljelenkovic/Benu.git osur-lab
+$ cd osur-lab
+$ rm -rf .git
+$ cd Chapter_08_Processes/06_Processes
+$ make qemu
+</pre>
+	Ako sve radi (i pokrene se) onda prekinuti simulaciju (Ctrl+C) te obrisati privremeno izrađene datoteke: <code>make cleanall</code>.
+	Ako nešto ne radi (nedostaje neki alat) pogledati upute za pripremu razvojne okoline.
+<pre>$ make cleanall && cd ../..</pre>
+</div>
+
+&nbsp;
+
+<h2>Osnovni rad s git-om</h2>
+<div class="opis">
+Pogledati upute <a href="git-osnovno.html">Osnovno o Git-u</a>.
+<p>Više se može pronaći u skripti, ali i na webu, iz drugih izvora, npr.
+<a href="http://en.wikibooks.org/wiki/Git/Introduction">link1</a>,
+<a href="http://rogerdudler.github.io/git-guide/">link2</a>,
+<a href="https://blog.udemy.com/git-tutorial-a-comprehensive-guide/">link3</a>.
+</div>
+
+&nbsp;
+
+<h2>Napraviti korisnički račun i repozitorij na <a href="https://github.com/">github</a> ili <a href="https://gitlab.com/">gitlab</a></h2>
+	<ul>
+	<li>Upute za navedeno nalaze se na stranicama nuditelja usluga.</li>
+	<li>Ime repozitorija neka bude jednako kratici predmeta: <code>osur</code></li>
+	<li>Repozitorij treba biti privatan.</li>
+	<li>Ne koristiti mogućnost sustava da sam napravi početni prazan repozitorij. Problem je što početna grana ponekad nije "master" (nego main ili slično) što stvara probleme kasnije. Repozitorij napraviti prema uputama ispod.</li>
+	<li>Za korištenje repozitorija potrebno je napraviti ključeve (upute: <a href="https://gitlab.com/profile/keys">gitlab</a>, <a href="https://github.com/settings/keys">github</a>), primjerice naredbama:<pre>
+$ ssh-keygen -t ed25519 -C "ime.prezime@fer.hr" -f gitlab_kljuc
+$ mv gitlab_kljuc gitlab_kljuc.pub ~/.ssh/</pre>
+Dodati u <code>~/.ssh/config</code> (napraviti ga ako ne postoji):<pre>
+Host gitlab.com
+	HostName gitlab.com
+	User git
+	IdentityFile ~/.ssh/gitlab_kljuc</pre>
+Kopirati sadržaj <code>gitlab_kljuc.pub</code> (javni ključ, najčešće izgleda: <code>ssh-ed25519 [nešto] ime.prezime@fer.hr</code>) na github/gitlab.
+	</p>
+	</li>
+	<li>Postaviti početni sadržaj repozitorija (nastavak na naredbe od točke 1)<pre>
+$ cd ~/osur-lab</pre></li>
+	<li>Dodati datoteku <code>student.txt</code> u kojoj navesti JMBAG, ime i prezime (odvojene tabulatorom: <code>0036123456&lt;tab&gt;Pero&lt;tab&gt;Horvat&lt;razmak&gt;Perić&lt;novi-red&gt;</code>).</li>
+	<li>Inicijalizirati početni sadržaj repozitorija:<pre>
+$ git init
+$ git config user.name "Ime Prezime"
+$ git config user.email "ime.prezime@fer.hr"
+$ git remote add origin git@gitlab.com:username/osur.git   #ili github, username => vaš login na tom sustavu
+$ git add .
+$ git commit -m "Pocetno stanje"
+$ git push -u origin master</pre></li>
+
+	<li>Dodati grane lab1-lab6<p>
+	Svaku laboratorijsku vježbu treba raditi u zasebnoj grani.
+    Stoga je prije početka izgradnje vježbi potrebno napraviti sve grane, a tek onda pojedinu izrađivati u svojoj grani, a da bi se jednostavnom usporedbom neke grane i početne mogle vidjeti promjene napravljene za tu vježbu.
+<pre>$ git branch lab1
+$ git branch lab2
+$ git branch lab3
+$ git branch lab4
+$ git branch lab5
+$ git branch lab6
+$ git push --all origin
+</pre>
+	Više o granama u tekstu u nastavku.
+	<li>Dodati na projekt korisnika <code>ljelenkovic</code> (s ovlastima za promjene). <mark>Studenti koji ponavljaju to moraju također (opet) napraviti (bez obzira što su možda labose napravili prošle godine)!</mark></li>
+	</ul>
+&nbsp;
+
+<h2>Raditi promjene - izrađivati laboratorijske vježbe</h2>
+<div class="opis">
+    <p>Svaku laboratorijsku vježbu raditi u zasebnoj grani <code>labX</code> (X je 1,2,3,4,5 ili 6).</p>
+<h3>Ukratko o granama u gitu</h3>
+    Mehanizam grananja je složen. Pojednostavljeno je to "paralelni svijet"
+    stanja koda. Stvaranje nove grane je stvaranje "paralelnog svijeta" koji je
+    u trenutku stvaranja jednak grani iz koje je stvoren (slično kao <code>fork()</code>).
+    <p>Prebacivanje s trenutne grane na granu <code>druga-grana</code> radi se sa: <pre>git checkout druga-grana</pre>
+    Prije promjene grane treba trenutnu pohraniti, ako je mijenjana (ili ostaviti promjene za novu granu).</p>
+
+    Osnovna namjena grana jest ispitivanje neke nove ideje/funkcionalnosti i sl.
+    Ako bi ta ideja bila dobra onda bi se prihvatila (spojila s glavnom granom,
+    tj. s <code>master</code>). Inače se lako odbaci (ili ostavi neka stoji jer ne smeta).<br>
+
+    <p>Nova grana se može stvoriti sa:
+    <pre>$ git branch ime-grane</pre>
+    te sa:
+    <pre>$ git checkout -b ime-grane</pre>
+    Razlika je što u drugom slučaju se odmah prebacujemo u tu granu.</p>
+
+    Stvaranje grane <code>lab1</code> i prelazak na tu granu:
+<pre>$ git checkout -b lab1</pre>
+
+    Promjena grane s trenutne na neku drugu (npr. na postojeću <code>lab2</code>):
+<pre>$ git checkout lab2</pre>
+
+    Prije promjene grane "spremiti" napravljene promjene!
+    Npr. ako se radi na grani <code>lab1</code> i želimo otići na granu <code>lab2</code>:
+<pre>$ git status
+# On branch lab1</pre>
+    Ako ima promjena, tj. ne kaže: <code>nothing to commit (working directory clean)</code>, onda prvo spremiti promjenu:
+<pre>git add -A   #ali prije obrisati nepotrebne datoteke!!!
+[...]
+$ git commit -m "nedovrseno"
+[...]
+$ git checkout lab2
+[...]</pre>
+
+    Prilikom stvaranja nove grane, nova grana "nasljeđuje" zatečeno stanje
+    (zatečeno u trenutnoj grani, tj. u radnom direktoriju (kao i kod <code>forka</code>)).
+
+<h3>Grane u laboratorijskim vježbama</h3>
+
+    Početna grana naziva se <code>master</code> i ona mora ostati nepromijenjena.
+	Zadatke treba rješavati u zasebnim granama (lab1-lab6).
+    Na taj način se vrlo jednostavno prate promjene napravljene za pojedinu
+    vježbu (npr. <code>git diff master..lab1</code>).
+<p>
+    Spremanje aktivne grane u zajednički repozitorij radi se sa:
+    <pre>$ git push origin ime-grane</pre>
+    Pretpostavka je da je lokalno bila aktivna grana <code>ime-grane</code>. Inače će se trenutno aktivna grana pohraniti u repozitorij kao grana <code>ime-grane</code>!
+
+    <p>Spremanje svih grana (odjednom) može se napraviti sa:
+    <pre>$ git push --all origin</pre>
+
+    Novije verzije git klijenta omogućavaju postavljanje opcije da <code>git push</code> automatski pohranjuje sve grane na poslužitelj.</p>
+
+    Dohvat koda iz repozitorija u kojem ide više grana ovisi je li se
+    repozitorij dohvaća prvi puta ili ažurira postojeći.
+    Ako se dohvaća prvi puta naredbom <code>git clone</code>, onda će se dohvatiti i sve grane. Ako već postoji lokalna kopija, ali nije ažurna, onda se grane mogu
+    dohvaćati jedna po jedna (sa <code>git pull ime-grane</code>) ili sve odjednom:
+<pre>$ git remote update
+$ git pull --all</pre>
+
+&nbsp;
+</div>
+
+<h2>Ukratko - što sve treba napraviti za LAB0</h2>
+<div class="opis">
+<ol>
+<li>Napraviti privatni repozitorij na gitlab/github-u.
+<li>Početni sadržaj repozitorija prema opisanom (kod, grane lab1-lab6 u početku jednake grani master).
+<li>Dodati u projekt korisnika <code>ljelenkovic</code>.
+</ol>
+</div>
+&nbsp;
+</section>
+
+<section>
+<h2>Dodatne upute</h2>
+
+<ul>
+<li><a href="upute-za-popravljanje.html">Dodatne upute za pripremu/izgled repozitorija</a> (i njegovo popravljanje).</li>
+<li><a href="provjeri-repozitorij.sh"type="text/html">Skripta za provjeru repozitorija</a></li>
+</ul>
+
+</section>
+
+</main>
+</body>
+
+</html>

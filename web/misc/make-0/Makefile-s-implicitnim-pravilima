@@ -1,0 +1,8 @@
+#CC = gcc
+CFLAGS = -MMD # opisano kasnije
+LDFLAGS = -O # optimiraj kod; dodano samo radi prikaza položaja
+LDLIBS = -lm
+
+brojke: brojke.o a.o b.o # brojke.o maknut na prvo mjesto!
+
+-include *.d # opisano kasnije

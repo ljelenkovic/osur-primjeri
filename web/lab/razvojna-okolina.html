@@ -1,0 +1,120 @@
+<!doctype html>
+
+<html lang="hr">
+
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link rel="stylesheet" type="text/css" href="osur.css">
+
+<title>Priprema razvojne okoline (na x86/x64 sustavima)</title>
+</head>
+
+<body>
+
+<h1>Priprema razvojne okoline (na x86/x64 sustavima)</h1>
+<a href="razvojna-okolina-ARM.html">Upute za računala temeljena na ARM procesorima.</a>
+<p>
+Ukoliko već koristite neki *UNIX* sustav (Linux ili slično) onda nije potrebno koristiti virtualno računalo, kao što je opisano u nastavku - dovoljno je provjeriti/instalirati potrebne alate (gcc i ostale).
+
+<h2>Kratke upute</h2>
+<ul>
+	<li><a href="http://www.zemris.fer.hr/~leonardo/os/ubuntu-on-windows.html">Ubuntu na Windowsima preko Windows Subsystem for Linux (WSL)</a>
+		<ul>
+		<li>Za upute najbolje potražiti: <code>install ubuntu on wsl</code> (ili bolje <code>wsl2</code>)
+		<li>Kratke upute 1: Otvoriti "Microsoft store", u njemu potražiti "ubuntu", odabrati neku inačicu, npr. "Ubuntu 22.04.2 LTS" i instalirati ju.
+		<li>Kratke upute 2 - "ručno":
+			<ul>
+			<li>u izborniku "Start" otipkati PowerShell, s desne strane odabrati "Run as Administrator"
+			<li>u terminalu upisati: <code>wsl --install</code> ili npr. <code>wsl --install -d Ubuntu-22.04</code>
+			</ul>
+		<li>Nakon instalacije Ubuntu pokrenuti klikom na "Ubuntu" - pokreće se terminal.
+		<li>Nakon početna podešavanja (korisničko ime i lozinka) može se početi raditi
+		<li>Do datoteka u tom sustavu može se doći preko Windows Explorera:
+			<ul>
+			<li>u Windows Exploreru (Navigation Pane) preko poveznice na dnu s lijeve strane: Linux->Ubuntu
+			<li>ili pokrenuti Windows Explorer iz Ubuntu terminala, iz direktorija koji želimo vidjeti u Windows Exploreru, npr.:
+<pre>$ cd os-lab
+$ explorer.exe .
+</pre>
+			</ul>
+		<li>Na Ubuntu je moguće je instalirati i pokretati grafičke aplikacije, npr. prema <a href="https://ubuntu.com/tutorials/install-ubuntu-on-wsl2-on-windows-11-with-gui-support">uputama</a>.
+Ali one vjerojatno nisu potrebne jer se mogu koristiti ekvivalentne s Windowsa.
+		</ul>
+
+
+	<li><a href="http://www.zemris.fer.hr/~leonardo/os/vmware/">Priprema virtualnog Ubuntu sustava korištenjem VMware player-a</a>
+	<br><b>Ukratko:</b><br>
+	<ul>
+		<li>VMware Player (~100 MB)</li>
+
+		<li>Ubuntu slika (1,5 GB)</li>
+
+		<li>Instalirati Ubuntu
+		<ol>
+			<li>Pokrenuti VMware Player</li>
+			<li>Create a New Virtual Machine</li>
+			<li>Install from: Installer disc image file (iso): ...</li>
+		</ol>
+		<ul>
+			<li>dalje slijediti upute</li>
+			<li>može se promijeniti sklopovlje ("Customize Hardware"): maknuti printer, dodati još memorije (ako imate barem 8 na računalu možete mu dati 2 GB umjesto 1 GB), 2 procesora</li>
+			<li>pogledati postavke sustava (na grafičkim uputama: tipkovnica, kratice, datum/vrijeme, ...)</li>
+		</ul>
+
+		</li>
+	</ul>
+	</li>
+
+	<li><div style="color:#d0d0d0">[Za lijene] <a href="https://drive.google.com/open?id=0B_TLAt5fJNYmT3BnUjRTb3pDWDg" style="color:#d0d0d0">pripremljen Ubuntu za VMware</a></div></li>
+</ul>
+
+<hr>
+
+<h2>Linkovi na alate za razvoj</h2>
+<h3>Linux operacijski sustavi (distribucije):</h3>
+<ul>
+	<li><a href="http://www.ubuntu.com/">http://www.ubuntu.com/</a></li>
+	<li><a href="http://fedoraproject.org/">http://fedoraproject.org/</a></li>
+	<li><a href="http://www.opensuse.org/en/">http://www.opensuse.org/en/</a></li>
+	<li><a href="http://www.linuxmint.com/">http://www.linuxmint.com/</a></li>
+	<li>...</li>
+</ul>
+<h3>Virtualizacijski alati:</h3>
+<ul>
+	<li><a href="http://www.vmware.com/go/downloadplayer">http://www.vmware.com/go/downloadplayer</a></li>
+	<li><a href="http://www.virtualbox.org/">http://www.virtualbox.org/</a></li>
+	<li>...</li>
+</ul>
+
+<h2>Dodatna instalacija potrebnih/poželjnih programa (za Ubuntu sustave):</h2>
+
+Ukoliko pri povećanju prozora VMware Player-a se ne poveća i njegov sadržaj (niti nakon restarta), onda treba instalirati dodatni alat. Preporučen je <code>open-vm-tools-desktop</code> (<code>sudo apt-get install open-vm-tools-desktop</code>). Ako ni sa njime ne radi onda instalirati VMware Tools (iz VMware Player menija "Player->Manage->Install VMware Tools" te slijediti upute).
+
+
+<pre># Instalacija dodatnih potrebnih/poželjnih programa
+# (ako već i jesu instalirani, neće javiti grešku ili će ih pokušati
+#  nadograditi na zadnju inačicu)
+
+sudo apt-get update
+sudo apt-get install git qemu-system # najčešće je ovo dovoljno!
+
+sudo apt-get install gcc libc6-dev binutils make mkisofs gdb
+
+# opcionalno (meld - usporedba datoteka i direktorija)
+sudo apt-get install meld
+
+# &quot;man&quot; stranice (vjerojatno već i postoje)
+sudo apt-get install manpages manpages-dev manpages-posix manpages-posix-dev glibc-doc
+
+# opcionalno, za primjere iz 2. poglavlja (Linux, Busybox, U-Boot), za prevođenje za ARM
+sudo apt-get install libncurses5-dev
+sudo apt-get install gcc-arm-linux-gnueabi libc6-dev-armel-cross u-boot-tools
+sudo apt-get install qemu-system
+sudo apt-get install gcc-arm-none-eabi
+sudo apt-get install gcc-multilib # samo ako se koristi 64-bitovni OS
+</pre>
+
+</body>
+
+</html>

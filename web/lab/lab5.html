@@ -1,0 +1,45 @@
+﻿<!doctype html>
+
+<html lang="hr">
+
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link rel="stylesheet" type="text/css" href="osur.css">
+
+<title>LAB5</title>
+</head>
+
+<body>
+
+<header>
+<h1>LAB5: Nadogradnja sinkronizacijskih mehanizama</h1>
+<hr>
+</header>
+
+<main>
+
+<section>
+U ovoj vježbi potrebno je napraviti nekoliko dodataka:
+<ol>
+<li>proširiti semafore i monitore pozivima: <code>sem_trywait</code> i <code>pthread_mutex_trylock</code>
+<li>dodati zaključavanje radnim čekanjem: <code>pthread_spin_init/destroy/lock/trylock/unlock</code>
+<li>dodati zaključavanje čitaj/piši: <code>pthread_rwlock_init/destroy/rdlock/wrlock/unlock</code>
+</ol>
+
+Mehanizmi su opisan u skripti, u dodatku E. Definicija sučelja (i ponašanje) može se dobiti pomoću uputa man stranica (npr. <code>man pthread_rwlock_init</code>).
+
+<p>
+Napisati programe s barem dvije dretve koje demonstriraju korištenje navedena sučelja. Za svako sučelje mogu biti druge dretve.
+
+<p>
+<b><mark>Dodatak</mark></b>
+<p>
+Preporuka je raditi u 07/07 (<code>Chapter_07_Threads/07_Simple_RR</code>), barem drugi dio zadatka (<code>pthread_spin_init/destroy/lock/trylock/unlock</code>). Naime, u 07/06 koristi se prioritetno raspoređivanje a obzirom da će u primjeru vjerojatno sve dretve imati isti prioritet, ako se dogodi da je jedna dretva prošla <code>spin_lock</code> (i tamo simulira neki malo duži rad s sleep) kad druga dretva pozove <code>spin_lock</code> ona će zauzeti procesorsko vrijeme i nitko ju neće maknuti -- niti ona dretva koja je probuđena nakon spavanja. Zato se preporuča da se koristi 07/07 koji ima (vrlo jednostavan) raspoređivač podjelom vremena koji će omogućiti dretvi koja je zauzela ključ da nastavi kasnije i izađe iz kritična odsječka ("otključa").
+
+</section>
+
+</main>
+</body>
+
+</html>

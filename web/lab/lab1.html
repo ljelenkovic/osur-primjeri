@@ -1,0 +1,68 @@
+﻿<!doctype html>
+
+<html lang="hr">
+
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link rel="stylesheet" type="text/css" href="osur.css">
+
+<title>LAB1</title>
+</head>
+
+<body>
+
+<header>
+<h1>LAB1: Makefile</h1>
+<hr>
+</header>
+
+<main>
+Tražene promjene raditi u grani <code>lab1</code>!
+
+<section>
+<h2>Makefile</h2>
+<div class="opis">
+U repozitoriju <code><a href="https://github.com/ljelenkovic/osur-primjeri/">osur-primjeri</a></code> zadani su primjeri, a među njima je i direktorij  <code>make/lab1-2024</code> u kojem se nalazi primjer koda kojeg treba koristiti u LAB1. Sadržaj tog direktorija staviti u direktorij <code>lab1</code> unutar vašeg repozitorija, u granu <code>lab1</code>, tj. tamo gdje je <code>Chapter_01_Startup</code> (i ostali) od Benu treba biti direktorij <code>lab1</code>, a u <code>lab1</code> odmah sadržaj (<code>Makefile</code>, <code>main.c</code>, ...) a ne dodatni poddirektorij.
+
+<p>Početni direktorij repozitorija u grani <code>lab1</code> (nakon npr. <code>cd ~/osur-lab && git checkout lab1 && ls -l</code>):
+<pre>Chapter_01_Startup
+...
+lab1    (ovo je dodano za lab1 u odnosu na master)
+...
+README
+</pre>
+Sadržaj <code>lab1</code>:
+<pre>
+izlaz
+obrada
+ulaz
+Makefile
+...
+</pre>
+
+<p>
+U tom primjeru kod je raspodijeljen u direktorijima, ali se trenutno sve prevodi korištenjem početnog Makefilea.
+<p>
+Zadatak za LAB1 je promijeniti način prevođenja tako da svaki diretkorij ima svoj Makefile koji prevodi datoteke s kodom samo iz tog direktorija, poziva Makefileove iz poddirektorija te izgrađuje objekt od svih.
+Npr. Makefile u direktoriju <code>ulaz</code> treba kompajlirati <code>ulaz.c</code> u <code>ulaz.o</code>, pozvati Makefileove u direktorjima <code>datoteka</code>, <code>generator</code> i <code>tipkovnica</code> te na kraju povezati sve objekte u npr. <code>ulaz-obj.o</code>.
+Ako je u direktoriju samo jedna datoteka <code>.c</code>, bez poddirektorija, datoteka <code>.o</code> (koja je potrebna u višim direktorjima) može imati isto ime kako i <code>.c</code> datoteka (npr. u <code>ulaz/datoteka</code> ne treba stvarati <code>datoteka-obj.o</code> već se može zvati kao i <code>.c</code>, tj. <code>datoteka.o</code>).
+<p>
+Pogledati organizaciju koda i zaglavlja, a da bi na predaji mogli riješiti zadatak ("dodaj novu/promijeni datoteku/direktorij...").
+Ukratko, datoteke <code>.h</code> su istoimene datotekama <code>.c</code> u direktoriju. U datoteke <code>.h</code> staviti samo ono što <code>.c</code> ostvaruje i nudi višim slojevima, samo ono što treba biti vidljivo tamo. Sve ostalo postaviti u <code>.c</code> datoteke.
+Ako ima funkcija/struktura podataka potrebnih samo jednoj (toj) <code>.c</code> datoteci, onda ih označiti sa <code>static</code>.
+
+<p>
+<b>Provjeriti da se u repozitoriju ne nađu nepotrebne datoteke (npr. .o, prog, direktorij build za ostale vježbe).</b> Poželjno je u direktorij <code>lab1</code> dodati <a href="https://github.com/github/gitignore/blob/main/C.gitignore"><code>.gitignore</code></a> (preimenovati C.gitignore u .gitignore nakon dohvata), jer onaj u Benu pretpostavlja da će sve privremene datoteke biti samo u direktoriju <code>build</code>.
+<p>
+
+Pogledati <a href="https://github.com/ljelenkovic/osur-primjeri/tree/master/make">primjeri s Makefileovima</a>.
+</div>
+</section>
+
+
+
+</main>
+</body>
+
+</html>

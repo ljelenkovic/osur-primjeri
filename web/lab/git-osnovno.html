@@ -1,0 +1,197 @@
+﻿<!doctype html>
+
+<html lang="hr">
+
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link rel="stylesheet" type="text/css" href="osur.css">
+
+<title>Osnovno o Git-u</title>
+</head>
+
+<body>
+
+<header>
+<h1>Osnovno o Git-u</h1>
+<hr>
+</header>
+
+<main>
+<section>
+
+<p>Git je raspodijeljeni sustav za upravljanje revizijama izvornog koda.
+Razvijen od strane Linusa Torvaldsa za razvoj Linuxa (2005.).
+Osnovna ideja pri njegovu stvaranju je bila da sustav bude brz i bez nepotrebne
+komunikacije s poslužiteljem. Zato je svaka kopija repozitorija potpuna, tj.
+sadrži cijelu povijest razvoja - nije potrebna komunikacija s poslužiteljem za
+operacije. Poslužitelj služi kao središnji repozitorij na koji se promjene
+postavljaju i od kuda razni korisnici mogu dohvatiti kod.
+
+Git je vrlo moćan te stoga i vrlo složen sustav.
+Zato se u ovim kratkim uputama spominju samo neke jednostavnije operacije.</p>
+<pre>
+        Poslužitelj                                         Korisnik
+ +------------------------+                          +--------------------+
+ |                        |                          |   Lokalna kopija   |
+ | Središnji repozitorij  | <<<    git push    <<<   |     ("index")      |
+ |      ("index")         +--------------------------+                    |
+ |                        | >>> git clone/pull >>>   |   Radna inačica    |
+ |                        |                          |  ("working tree")  |
+ +------------------------+                          +--------------------+
+     (npr. github.com)                                 (lokalno računalo)
+
+                  Slika 1. Pojednostavljena arhitektura sustava
+</pre>
+
+<p>Središnji repozitorij (najčešće javni, "index") nalazi se na udaljenom
+poslužitelju. Na njemu se nalazi do sada objavljeni kod, zajedno sa svom
+poviješću promjena. Za prvi dohvat tog repozitorija lokalno koristi se naredba
+<code>clone</code>. Za kasniji dohvat promjena (kad već postoji lokalni) sa središnjee repozitorija koristi se <code>pull</code>.</p>
+
+<p>Kod svakog korisnika git repozitorija nalazi se kopija središnjeg repozitorija
+("index"), u poddirektoriju <code>.git</code>. Taj se repozitorij ne koristi izravno, već
+isključivo preko naredbe <code>git</code>.
+Osim kopije, kod korisnika se nalazi i radna inačica koda ("working tree") koja
+sadrži izvorni kod, tj. sve datoteke koje čine repozitorij, a koje korisnik
+može mijenjati. Primjerice, ako se repozitorij (korisni sadržaj) sastoji od direktorija <code>src</code>, <code>doc</code> i
+datoteke <code>README</code>, tada će u direktoriju gdje se repozitorij nalazi lokalno kod
+korisnika uz navedeno biti i direktorij <code>.git</code> prem idućoj slici.</p>
+
+<pre>
+.git    =>  lokalna kopija ("index"), ne dirati (koristi ga naredba git)
+doc     \
+src      >  radna inačica ("working tree")
+README  /
+
+   Slika 2. Primjer lokalnog direktorija s kopijom repozitorija
+</pre>
+
+<p>Korisnik radi promjene lokalno (u direktorijima <code>doc</code>, <code>src</code>, datoteci <code>README</code> i ostalima koje ovdje dodaje), prihvaća te promjene (naredbom <code>add</code> označava ono što želi prihvatiti, a naredbom <code>commit</code> ih "prihvaća") čime se one zapisuju u direktorij <code>.git</code> te nakon toga te prihvaćene promjene (ono što je "commit"-ano) objavljuje na poslužitelju (naredba <code>push</code>).
+</p>
+
+
+<p>Kad je korisnik zadovoljan promjenom koju je napravio on ju najprije dodaje u
+lokalni repozitorij (u <code>.git</code>) naredbama <code>add</code> i <code>commit</code>, a nakon toga, da bi promjene bile vidljive i ostalim korisnicima, promjene treba sinkronizirati s poslužiteljem naredbom <code>push</code>.
+Korisnik može napraviti više lokalnih promjena i dodavanja u lokalni repozitorij prije nego li te promjene pohrani i na poslužitelj.
+Za dodavanje svojih promjena u središnji repozitorij korisnik mora imati odgovarajuće dozvole na poslužitelju.</p>
+
+<p>U nastavku je prikazan kratki primjer rada s repozitorijem navođenjem naredbi te
+povremeno i dodatnog komentara.</p>
+
+<pre>
+$ git clone https://github.com/ljelenkovic/example.git git-example
+Cloning into 'git-example'...
+remote: Counting objects: 4, done.
+remote: Compressing objects: 100% (3/3), done.
+remote: Total 4 (delta 0), reused 0 (delta 0)
+Unpacking objects: 100% (4/4), done.
+Checking connectivity... done.
+
+$ cd git-example
+$ ls -al
+total 20
+drwxrwxr-x 3 leonardo leonardo 4096 Vel 16 18:59 ./
+drwxrwxr-x 9 leonardo leonardo 4096 Vel 16 18:59 ../
+drwxrwxr-x 8 leonardo leonardo 4096 Vel 16 18:59 .git/
+-rw-rw-r-- 1 leonardo leonardo  223 Vel 16 18:59 .gitignore
+-rw-rw-r-- 1 leonardo leonardo   32 Vel 16 18:59 README.md
+$
+$ vi hello.c
+</pre>
+
+Uneseno kroz uređivač teksta:
+
+<pre>
+#include &lt;stdio.h&gt;
+
+int main ()
+{
+	printf ( "Hello Git user!\n" );
+
+	return 0;
+}
+</pre>
+Prevođenje, pokretanje, ...
+<pre>
+$ gcc hello.c
+$ ./a.out
+Hello Git user!
+</pre>
+Stanje lokalnog repozitorija može se provjeriti naredbom <code>status</code>.
+<pre>
+$ git status
+On branch master
+Your branch is up-to-date with 'origin/master'.
+
+Untracked files:
+  (use "git add &lt;file&gt;..." to include in what will be committed)
+
+	hello.c
+
+nothing added to commit but untracked files present (use "git add" to track)
+</pre>
+
+Iako u direktoriju postoji i datoteka <code>a.out</code> ona se ne gleda stoga što je u datoteci <code>.gitignore</code> (koja se nalazi u početnom direktoriju) navedeno i <code>*.out</code>, tj. rečeno je da se navedene datoteke ignoriraju - ne čine izvorni kod, već su samo pomoćne datoteke koje nastaju pri prevođenju i koje nije potrebno pohranjivati na poslužitelj.
+
+<pre>
+$ git add hello.c
+$ git status
+On branch master
+Your branch is up-to-date with 'origin/master'.
+
+Changes to be committed:
+  (use "git reset HEAD &lt;file&gt;..." to unstage)
+
+	new file:   hello.c
+</pre>
+
+Prije prvog stavljanja datoteka u lokalni repozitori, git sustav traži da se korisnik predstavi. To je osobito značajno ako na projektu radi više osoba. "Predstavljanje" korisnika se može napraviti globalno (na razini korisnika za svaki repozitorij) ili za svaki projekt zasebno. Idućim naredbama postavlja se identifikacija korisnika samo za trenutni projekt (koji pripada direktoriju u kojem se nalazimo).
+
+<pre>
+$ git config user.name "Ime Prezime"
+$ git config user.email "email@adresa"
+</pre>
+
+Dodavanje označenih promjena u lokalni repozitorij obavlja se naredbom <code>commit</code>, a postavljanje tih promjena ("tih commit-ova") na git poslužitelj obavlja se naredbom <code>push</code>.
+
+<pre>
+$ git commit -m "dodan hello.c"
+[master fb0647c] dodan hello.c
+ 1 file changed, 8 insertions(+)
+ create mode 100644 hello.c
+$ git status
+On branch master
+Your branch is ahead of 'origin/master' by 1 commit.
+  (use "git push" to publish your local commits)
+
+nothing to commit, working directory clean
+$
+$ git push origin master
+Username for 'https://github.com': ljelenkovic
+Password for 'https://ljelenkovic@github.com':
+Counting objects: 4, done.
+Delta compression using up to 2 threads.
+Compressing objects: 100% (3/3), done.
+Writing objects: 100% (3/3), 395 bytes | 0 bytes/s, done.
+Total 3 (delta 0), reused 0 (delta 0)
+To https://github.com/ljelenkovic/example.git
+   110ef3c..fb0647c  master -> master
+</pre>
+Umjesto cijele naredbe <code>git push origin master</code> može se navesti i samo <code>git push</code>. Međutim, tada se u ispisu može pojaviti i poruka koja sugerira korisniku da odabere način pohranjivanja "grana" (branch) na udaljeni repozitorij (obzirom da u naredbi nije određeno u koju granu pohranjujemo trenutno aktivnu. Naredbom <code>git config push.default matching</code> kažemo da sa <code>git push</code> pohrani sve lokalne grane na poslužitelj pod istim imenima. Ona druga opcija (<code>simple</code>) će pohraniti samo trenutno aktivnu granu.
+
+<p>Ukoliko ima promjena na središnjem repozitoriju koje nisu ažurirane lokalno (npr. neki drugi korisnik je u međuvremenu postavio svoje promjene na poslužitelj) tada se preko naredbe pull može ažurirati lokalni repozitorij.</p>
+
+<pre>
+$ git pull origin master
+From https://github.com/ljelenkovic/example
+ * branch            master     -> FETCH_HEAD
+Already up-to-date.
+</pre>
+
+</section>
+
+</main>
+</body>
+
+</html>

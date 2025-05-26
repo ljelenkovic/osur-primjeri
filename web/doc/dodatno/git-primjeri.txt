@@ -1,0 +1,89 @@
+﻿GIT - primjer rada (osnovno)
+
+# Napraviti novi rep na githubu, (privatni/javni), ne ga inicijalizirati
+# Npr. github.com:ljelenkovic/test
+# Napraviti sadržaj koji će ići u repozitorij, lokalno
+mkdir test
+cd test
+echo "# Primjer repozitorija" > README.md # > stavlja u datoteku, briše prethodni sadržaj ako postoji!
+echo "Primjer koristenja jednostavnih git naredbi" >> README.md # >> nadodaje na postojeću datoteku
+pico hello.c
+# Upisati jednostavan "Hello World" progam
+# npr. c/p sa https://github.com/ljelenkovic/example/)
+# Dodati .gitignore, npr. s iste adrese
+
+# Inicijalizirati repozitorij lokalno, preko naredbi u uputama:
+git init
+git config user.name "Leonardo Jelenkovic"
+git config user.email "leonardo.jelenkovic@fer.hr"
+git remote add origin git@github.com:ljelenkovic/test.git
+git add .
+git commit -m "Pocetno stanje"
+git push -u origin master
+
+# Dohvat repozitorija koji postoji ali nema ga lokalno
+# Za primjer, u drugom terminalu napraviti git clone
+git clone git@github.com:ljelenkovic/test.git test2 # napraviti će ga u direktoriju test2
+# Opcionalno se predstaviti kao netko drugi!
+
+# Promijeniti nešto u prvom terminalu, git add, commit, push (lazygit, ali oprezno!)
+# U drugom napraviti git pull (ažuriranje postojećeg repozitorija promjenama koje je netko drugi napravio na git poslužitelju)
+git pull
+
+# Ima li lokalnih promjena?
+$ git status # pokazuje koje su datoteke promijenjene, ako ih ima, te još neke događaje
+$ git diff # pokazuje promjene u datotekama
+
+Dodavanje lokalnih promjena u lokalni repozitorij:
+$ git add datoteka #ili više datoteka/direktorija - označavanje koje promjene dodati
+$ git commit -m "kratki opis promjene" #dodavanje u repozitorij
+# git status # vidi se da smo naprijed od mastera
+
+Lokalnih promjena u repozitoriju može biti i više.
+# napravi promjenu i u drugom repozitoriju
+
+Postavljanje tih promjena na git poslužitelj:
+$ git pull #opcionalno, ako možda tamo ima i neka promjena koja nije još evidentirana...
+$ git push #opcionalno dodati origin master, ako se to ne podrazumijeva
+
+# Za OSUR (FER)
+# reset, revert, https://opensource.com/article/18/6/git-reset-revert-rebase-commands
+git reset <commit-id> --vraća se na zadano stanje kao glavno/head (odbacuje sve iduće promjene, "briše ih")
+git revert <commit-id> -- poništava promjene koje su napravljene u tom dodatku (tom commitu)
+možda će trebati: git push --force da bi se to odrazilo i na repozitorij u poslužitelju
+# git revert ipak nije ono što je pričano na predavanju, već je to git restore
+
+# git restore
+git restore -s <commit-id> <path>
+Npr. git restore -s b13a90c1f1722aa4c1ce97f9ffbee9f562e5d18c .
+će u "working directory" postaviti stanje kakvo je bilo u tom dodatku/commitu
+To stanje onda treba dodati (add/commit/push) u novi dodatak
+Naredba reset briše odbačene promjene, dok restore ih "poništava", ali su dalje prisutni kroz povijest promjena.
+
+# stash: https://opensource.com/article/21/4/git-stash
+Pohraniti trenutne promjene koje nisu dodane (add/commit) na "stog"
+Onda raditi štogod, npr. pomaknuti se u drugu granu, te vratiti/primijeniti te promjene na stogu
+git stash (-a)
+git stash list/pull/clear/show/"drop id"
+
+# Konflikti i njihovo rješavanje (osnovno), kroz rad s granama
+- ideja grana je da se prije dodavanja u "master" prvo testira, a onda kad je sve OK doda u master korištenjem spajanja te grane (merge)
+- npr. iz grane master nastaje grana modul42 gdje se nešto napravi
+  - ako je to OK, onda se može spojiti s masterom na slijedeći način
+    git checkout master
+    git merge modul42
+- spajanje može biti problematično ako ima konfliktnih promjena s masterom (možda se i on mijenjao, npr. neke druge grane su se u međuvremenu spojile u njega)
+- u tom slučaju treba rješiti konflikte
+- o tome više negdje drugdje, ovdje samo dvije naredbe za odbacivanje promjena nastalih pokušajem spajanja
+git merge --abort
+git reset (opisan prije)
+
+# lazygit - skratiti broj naredbi za dodavanje u repozitorij
+U .bashrc (u početnom /home/<korisnik> direktoriju dodati
+function lazygit() {
+    git add *
+    git commit -m "$1"
+    git push
+}
+Sada umjesto git add+commit+push: lazygit "opis promjene"
+Ali oprezno, maknuti prije višak datoteka, da se ne dodaju datoteke koje tamo ne trebaju biti (.o i slične)!

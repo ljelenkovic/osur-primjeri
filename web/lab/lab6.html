@@ -1,0 +1,46 @@
+﻿<!doctype html>
+
+<html lang="hr">
+
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link rel="stylesheet" type="text/css" href="osur.css">
+
+<title>LAB6</title>
+</head>
+
+<body>
+
+<header>
+<h1>LAB6: Cjevovod</h1>
+<hr>
+</header>
+
+<main>
+
+<section>
+<h2>Ostvariti cjevovod</h2>
+<div class="opis">
+Ostvariti mehanizam cjevovoda kojim mogu komunicirati i dretve različitih procesa sa sljedećim svojstvima i sučeljima:
+<ul>
+<li>stvaranje: <code>int pipe_create(char *name, size_t size);</code> (vraća id)
+<li>dohvat id-ja postojećeg (ili provjera da li postoji): <code>int pipe_get_id(char *name);</code>
+<li>slanje u cijev: <code>int pipe_write(int id, char *data, size_t size);</code>
+	<ul>
+	<li>kod slanja treba sve poslati ( <code>size</code> bajtova)
+	</ul>
+<li>čitanje iz cijevi: <code>int pipe_read(int id, char *data, size_t size);</code>
+	<ul>
+	<li>kod primanja treba pročitati <code>size</code> bajtova ili manje ako ih toliko nema u cijevi
+	</ul>
+<li>Ne mora ići kroz mehanizam datoteka (open/read/write)!
+</ul>
+
+</div>
+</section>
+
+</main>
+</body>
+
+</html>

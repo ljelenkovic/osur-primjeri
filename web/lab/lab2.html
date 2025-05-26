@@ -1,0 +1,59 @@
+﻿<!doctype html>
+
+<html lang="hr">
+
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link rel="stylesheet" type="text/css" href="osur.css">
+
+<title>LAB2</title>
+</head>
+
+<body>
+
+<header>
+<h1>LAB2: Skripta za povezivanje; ispitivanje koda (debugiranje)</h1>
+<hr>
+</header>
+
+<main>
+
+<section>
+<h2>Priprema koda "za učitavanje u ROM" i "izvođenje iz RAM-a"</h2>
+<div class="opis">
+Promijeniti skriptu za povezivanje <code>ldscript.ld</code> te dodati datoteku <code>premjesti.c</code> u direktorij <code>boot</code> tako da se sav sustav pripremi za učitavanje na adresu ROM=0x100000 (kao i sada), ali da ispravno radi tek kad se:
+<ul>
+<li>podaci iz odjeljaka <code>.data*</code> premjeste na adresu <code>ADDR_DATA</code> (postaviti ju u <code>config.ini</code> na  npr. <code>0x200000</code>)
+<li>podaci iz odjeljaka  <code>.bss*</code> premjeste odmah iza <code>.data*</code>
+<li>stog postavi tako da mu je vrh na adresi <code>0x800000</code> (vrh=kraj, početak postaviti na manju adresu: <code>0x800000 - STACK_SIZE</code>)
+<li>dodati polja <code>p1[P1SIZE]</code> i <code>p2[P2SIZE]</code> i postaviti ih na adrese <code>P1ADDR</code> i <code>P2ADDR</code>
+	<ul>
+	<li>sve konstante definirati u <code>config.ini</code>
+	<li>način ostvarenja polje je proizvoljan - može i samo kroz skriptu, ili i kroz kod
+	<li>dodati kod u neki program koji popunjava zadana polja s vrijednošću <code>0xab</code>.
+	</ul>
+</ul>
+<p>Pokazati da je navedeno napravljeno ispisom adresa odgovarajućih elemenata (npr. adresa neke funkcije, adresa globalne varijable, adresa lokalne varijable na stogu).
+<p>
+Ako odjeljak <code>.eh_frame</code> stvara probleme, odbaciti ga sa <code>/DISCARD/ : { *(.eh_frame) }</code>
+
+<p>Primjer prikazan na predavanju (prije par godina) <a href="lab2-demo.diff">lab2-demo.diff</a>.
+</div>
+</section>
+
+<section>
+<h2>Ispitivanje koda, traženje grešaka</h2>
+<div class="opis">
+Upoznati se s ispitnim pokretanjem i traženjem grešaka korištenjem alata <code>gdb</code>. U datoteci <code>Makefile</code> već postoje pripremljeni predmeti prevođenja <code>debug_qemu</code> i <code>debug_gdb</code>.
+<p>
+<a href="lab2-gdb">Primjeri koda s greškama</a>.
+</div>
+</section>
+
+
+
+</main>
+</body>
+
+</html>

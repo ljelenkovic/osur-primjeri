@@ -1,0 +1,163 @@
+<!doctype html>
+
+<html lang="hr">
+
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link rel="stylesheet" type="text/css" href="osur.css">
+
+<title>OSUR - Struktura repozitorija, popravljanje</title>
+</head>
+
+<body>
+<h1>Struktura repozitorija i upute za popravak</h1>
+<h2>Struktura repozitorija</h2>
+Potrebno stanje grana (ne direktorija):
+<ol>
+<li> <code>master</code> - početna grana - NE MIJENJATI NIŠTA U NJOJ
+
+<li> <code>lab1</code> - promjene samo u direktoriju <code>lab1</code> kojeg dodati
+<li> <code>lab2</code> - promjene samo u <code>Chapter_02_Source_tree/04_Debugging/</code>
+         samo one koje se tiču druge vježbe. 
+         Mijenjaju se postojeće datoteke! Ne stvarati nove direktorije i u njima kopirati cijelu strukturu koda.
+         Naredba <code>git diff master</code> će tada pokazati promjene u kodu (nakon što su one dodane u granu <code>lab2</code>).
+
+<li> <code>lab3</code> - grana koja uključuje promjene samo prema 3. zadatku.
+         NE uključuje promjene iz <code>lab1</code> ni <code>lab2</code>
+<li>(itd.)
+</ol>
+
+Pri predaji pojedinih zadataka od studenata se dodatno tražila modifikacija
+(pri predaji u laboratoriju). Promjene su tada rađene u grani <code>LABx</code> (<code>x</code> je broj)
+<br>
+
+<h2>Što ako vaš repozitorij nije napravljen po gornjim pravilima?</h2>
+Prvo treba provjeriti te ako nije onda popraviti.<br>
+<br>
+Korisna naredba je <code>git diff</code>.
+Npr. usporedba među grane <code>master</code> i ostalih:
+<pre>
+$ git checkout master
+$ git diff master..lab1
+$ git diff master..lab2
+...
+</pre>
+Usporedba između <code>lab1</code> i <code>lab2</code>
+<pre>
+$ git checkout lab1
+$ git diff lab1..lab2
+</pre>
+
+U promjenama se vide problemi (što je u pojedinoj grani a nije trebalo biti).
+<p>
+Obzirom na moguće "probleme" pri radu popravaka preporuka je napraviti kopiju
+cijela direktorija. Npr. ako je radni direktorij <code>/home/user/osur/benu</code>
+napraviti kopiju: <code>cd && cp -r osur/benu osur/benu-rezerva</code>
+<p>
+U slučaju problema, iz kopije se uvijek može kopirati datoteka/direktorij
+koji "više nije" dohvatljiv (na jednostavan način) iz dijelom popravljena koda.
+<p>
+U KOPIJI NIŠTA NE BRISATI, NE KORISTITI NAREDBE <code>git add</code>, <code>git commit</code> I SL.
+
+<h3>Primjer poništavanja promjene u grani master</h3>
+
+(Brojke korištene u ovom prikazu vjerojatno nisu iste kao u vašem!)
+
+<pre>
+$ git checkout master
+Switched to branch 'master'
+Your branch is up-to-date with 'origin/master'.
+$ git log
+commit 1d33c53b94aec8bd5f1440f2edfa3d2f7dc97413      //identifikacijski broj ove promjene, koristi se u nastavku, različit u vašem kodu
+Author: Leonardo Jelenkovic &lt;leonardo.jelenkovic@fer.hr&gt;
+Date:   Mon Feb 27 21:28:33 2017 +0100
+
+    Pocetni prazan repozitorij
+</pre>
+
+Ovako bi trebalo biti, bez vaših promjena u grani master.<p>
+Ako nije tako nego npr.:
+
+<pre>
+$ git log
+commit ffceb9d90fa4d8840ccc6e63f246f1a7f83ac2c6
+Author: Leonardo Jelenkovic &lt;leonardo.jelenkovic@fer.hr&gt;
+Date:   Thu Mar 23 14:27:10 2017 +0100
+
+    lab1
+
+commit 1d33c53b94aec8bd5f1440f2edfa3d2f7dc97413
+Author: Leonardo Jelenkovic &lt;leonardo.jelenkovic@fer.hr&gt;
+Date:   Mon Feb 27 21:28:33 2017 +0100
+
+    Pocetni prazan repozitorij
+</pre>
+
+onda treba vjerojatno popraviti. Pogledati da li ima promjena:
+
+<pre>
+$ git diff 1d33c53b94aec8bd5f1440f2edfa3d2f7dc97413
+</pre>
+
+Ako nema, onda je repozitorij isti kao i početan (greška je u
+međuvremenu popravljena). Ako ima, onda to treba popraviti.
+Ima mnogo načina kako to napraviti.
+<p>
+Dva pristupa su opisana u nastavku.
+<p>
+1. Koristiti <code>git revert</code> naredbu (poništiti sve commitove osim početnog)
+<pre>
+$ git revert ffceb9d90fa4d8840ccc6e63f246f1a7f83ac2c6
+$ git push
+</pre>
+
+Ako ima više promjena navesti ih sve (njihove oznake - heksadekadske brojeve).
+Navedenu promjenu onda pohraniti u repozitorij (<code>git push origin master</code>).
+<p>
+2. Prepisati promjene početnim stanjem
+<p>
+a) Do početnih datoteka doći sa:
+<pre>
+   $ git checkout 1d33c53b94aec8bd5f1440f2edfa3d2f7dc97413   //zamijeniti id-jem prvog commita!
+   $ mkdir ../privremeno
+   $ cp -r * ../privremeno/
+</pre>
+b) Obrisati sve iz direktorija (osim <code>.git</code> direktorija)
+<pre>
+   $ git checkout master
+   $ rm -rf *   //OPREZNO S OVOM NAREDBOM - provjerite da ste u repozitoriju!
+</pre>
+c) Kopirati izvorni sadržaj
+<pre>
+   $ mv ../privremeno/* .
+</pre>
+d) Dodati sve u repozitorij
+<pre>
+   $ git add -A
+   $ git commit -m "vracam pocetno stanje"
+   $ git push origin master
+</pre>
+
+<h2>Provjera ispravnosti</h2>
+Kod u pojedinog grani mora raditi ono što je zadatkom zadano.
+<br>Provjeriti:
+<ol><li>prevodi li se kod (<code>make</code> ne smije javljati greške)
+<li>pokreće li se sustav (<code>make qemu</code>)
+</ol>
+
+<p>Ukratko:
+<pre>
+git checkout lab1
+cd Chapter_02_Source_tree/04_Debugging/
+make
+make qemu
+make cleanall
+git diff master
+</pre>
+Sve treba biti prema očekivanome.<br>
+I tako za sve vježbe.
+
+</body>
+
+</html>

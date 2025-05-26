@@ -1,0 +1,97 @@
+﻿<!doctype html>
+
+<html lang="hr">
+
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link rel="stylesheet" type="text/css" href="osur.css">
+
+<title>LAB3</title>
+</head>
+
+<body>
+
+<header>
+<h1>LAB3: Obrada prekida prema prioritetu</h1>
+<hr>
+</header>
+
+<main>
+
+<section>
+<h2>Zadatak</h2>
+<div class="opis">
+<p>Prilagoditi prekidni podsustav tako da se prekidi obrađuju prema prioritetu &ndash; svakom prekidnom broju pridijeliti prioritet identičan prekidnom broju. Ako se za vrijeme obrade jednog prekida dogodi novi zahtjev većeg prioriteta, on će se prihvatiti i obraditi odmah, odnosno, ako je manjeg prioriteta označiti ga za obradu i obraditi kasnije. Koristan dio obrade simuliranih prekida (koje simulirati ispisom i odgodama, npr. ukupnog trajanja 10 s) izvoditi s dozvoljenim prekidanjem.
+<p>
+Da neke obrade ne bi previše čekale zbog "navale" prioritetnijih zahtjeva, dodati slijedeću izmjenu. Svaki puta kad neki prekid bude obrađen, svima koji još nisu obrađeni (prekinuti su u obradi ili niti nisu krenuli s obradom) povećati prioritet za tri.
+
+
+<p>
+Koristiti sklopovske prekide da pored "svoje" operacije još simuliraju pojavu novih.
+</div>
+
+<h2>Moguća ideja</h2>
+<div class="opis">
+Postojećim prekidima (irq &le; 48) dati velike prioritete (npr. irq+100) da se uvijek prihvate i obrade (oni se i ne preklapaju).
+Koristiti serijsku vezu kao izvor prekida (ili tipkovnicu). Svaki put kad se pročita neki znak (stisnuti broj), njega u upravljačkom programu postaviti i u dodatnu varijablu (npr. u funkciji <code>uart_read</code> pročitani znak staviti i u varijablu <code>irq_prio</code>, pretpostaviti da je broj: <code>irq_prio = up->inbuff[up->inl] - '0'</code>).
+Na kraju obrade prekida prije povratka u prekinuto, pogledati je li u toj varijabli ima nešto. Ako ima onda iz toga generirati prioritet novog zahtjeva i obrisati tu varijablu.
+<p>Ideja prihvata prekida bi bila:
+<pre>
+smanji_novima = 0
+//umjesto povećanja prioriteta svim postojećim, smanji novima pri dodavanju
+
+dodaj_zahtjeve(irq_num)
+{
+	za sve ihndlr registrirane za irq_num
+		zahtjev = kmalloc...
+		zahtjev.handler = ihndlr
+		zahtjev.prio = (irq_num &le; 48? irq_num + 100; irq_num - smanji_novima)
+		zahtjev.u_obradi = laž
+		...
+		dodaj 'zahtjev' u 'listu zahtjeva uređenu prema prioritetu (zahtjev.prio)
+}
+
+funkcija za prihvat prekida(irq_num)
+{
+	dodaj_zahtjeve(irq_num)
+
+	prvi = prvi zahtjev iz 'liste zahtjeva'
+	dok je prvi != NULL i prvi.u_obradi == laž
+	{
+		prvi.u_obradi = istina
+
+		<b>dozvoli prekidanje</b>
+		obradi 'prvi' (pozovi prvi.handler.ihandler(...))
+		<b>zabrani prekidanje</b>
+
+		makni 'prvi' iz liste
+		smanji_novima += 3
+
+		//simulacija novih zahtjeva nakon obrade prekida serije
+		ako je irq_prio > 0 { //postavlja se u obradi serije
+			dodaj_zahtjeve(irq_prio + 49) //da budu 49-58 kad se stisne 0-9
+			irq_prio = 0
+		}
+		prvi = prvi zahtjev iz liste zahtjeva
+	}
+	ako je prvi == NULL
+		smanji_novima = 0
+}
+</pre>
+
+Varijablu <code>irq_prio</code> se može deklarirati u <code>interrupts.c</code> a prije njenog korištenja iz <code>uart.c</code> u funkciji <code>uart_read</code> samo ju označiti da postoji s <code>extern int irq_prio;</code>
+</div>
+
+<p>
+<div class="opis">
+Primjer programa koji ispituje rad prioritetnog prekidnog sustava je u datoteci <a href="lab3/interrupts.c">interrupts.c</a>.
+</div>
+
+</section>
+
+
+</main>
+</body>
+
+</html>

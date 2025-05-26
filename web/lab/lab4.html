@@ -1,0 +1,73 @@
+﻿<!doctype html>
+
+<html lang="hr">
+
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link rel="stylesheet" type="text/css" href="osur.css">
+
+<title>LAB4</title>
+</head>
+
+<body>
+
+<header>
+<h1>LAB4: Dinamička memorija</h1>
+<hr>
+</header>
+
+<main>
+
+<section>
+<h2>Zadatak</h2>
+<div class="opis">
+Dodati novi način upravljanja dinamičkom memorijom složenosti O(1).
+<p>
+Dodati ga u <code>lib/mm/O1.c</code> s novim sučeljem <code>malloc0_init()</code>/<code>malloc0(size)</code>/<code>free0(blok)</code>.
+<p>
+Pokazati rad korištenja novog sučelja na primjerima koji trebaju demonstrirati i probleme kad nema memorije.
+<p>
+Pri radu, pri svakoj promjeni prikazati stanje strukture podataka. Npr.
+<pre>
+O1malloc inicijaliziran, stanje:
+stanje blokova 32: 0000000000000000
+stanje blokova 48: 0000000000000000
+stanje blokova 64: 0000000000000000
+stanje blokova 96: 0000000000000000
+stanje blokova 128: 0000000000000000
+stanje blokova 196: 0000000000000000
+stanje blokova 256: 0000000000000000
+...
+
+zauzmi 100 B
+dodijeljeno 128 B na adresi 0xNešto
+stanje blokova 128: 0001001100000000
+
+oslobodi 0x12345678
+oslobođen blok veličine 512 B
+stanje blokova 512: 0000000000001100
+</pre>
+
+<h2>Primjer ideje za ostvarenje</h2>
+Kod inicijalizacije može se blok za ovaj način tražiti od sustava s malloc/kmalloc.
+<p>
+Definirati nekoliko veličina blokova, npr. 32, 48, 64, 96, 128, ... i samo takve blokove dodjeljivati. Npr. ako je traženo 100 B dati mu blok od 128 B.
+<p>U inicijalizaciji tražiti blok memorije (s malloc) te dobiveni blok podijeliti na dijelove (npr. 10-tak za 32 B, 10-tak za 48 itd.). Bitmapama pratiti koji su slobodni a koji zauzeti -- blokovi ne trebaju imati zaglavlja!
+
+<p>
+Preporuka za veličine blokova: 32, 48, 64, 96, 128, 196, ...
+<br>
+<code>bsz[0]=32; bsz[i+1]= (1&lt;&lt;(msb_index(bsz[i])-1))</code> // iz: arch/i386/bits.h: <code>msb_index(num) = 31 - __builtin_clz(num)</code>
+<br>//48=32+16; 64=48+16; 96=64+32...
+<p>
+Implementaciju se može najprije napraviti i izvan Benu koda - ne ovisi o ničemu. Tek kad ispravno proradi ugraditi ga u Benu.
+
+
+</div>
+</section>
+
+</main>
+</body>
+
+</html>
